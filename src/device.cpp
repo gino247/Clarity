@@ -1,4 +1,5 @@
 #include <device.h>
+#include <LovyanGFX.hpp>
 
 Device::Device()
 {
@@ -58,4 +59,29 @@ Device::Device()
     }
 
     setPanel(&_panel_instance);
+}
+
+void Device::screenBrightness(uint8_t value)
+{
+    setBrightness(value);
+}
+
+void Device::checkScreenDimming()
+{
+  // TODO: wire up the 'false' to a check if screen should be dimmed
+  if (!isScreenDimmed && false)
+  {
+    // Time to dim the screen
+    screenBrightness(DIM_BRIGHTNESS);
+    isScreenDimmed = true;
+  }
+}
+
+void Device::resetScreenBrightness()
+{
+  if (isScreenDimmed)
+  {
+    screenBrightness(DEFAULT_BRIGHTNESS);
+    isScreenDimmed = false;
+  }
 }

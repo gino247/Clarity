@@ -1,13 +1,13 @@
-#include <LovyanGFX.h>
+#include <LovyanGFX.hpp>
 
-// screen configs
+// configs
 #define WIDTH 240
 #define HEIGHT 240
 #define OFFSET_X 0
 #define OFFSET_Y 0
 #define RGB_ORDER false
 
-// display
+// nodemcu-32 <> 1.28" round display (GC9A01 driver)
 #define SPI SPI2_HOST
 #define SCLK 18
 #define MOSI 23
@@ -21,10 +21,18 @@
 
 class Device : public lgfx::LGFX_Device
 {
+private:
     lgfx::Panel_GC9A01 _panel_instance;
     lgfx::Light_PWM _light_instance;
     lgfx::Bus_SPI _bus_instance;
 
 public:
+    const uint8_t DIM_BRIGHTNESS = 10;
+    const uint8_t DEFAULT_BRIGHTNESS = 100;
+    bool isScreenDimmed = false;
+
     Device(void);
+    void screenBrightness(uint8_t value);
+    void checkScreenDimming();
+    void resetScreenBrightness();
 };
