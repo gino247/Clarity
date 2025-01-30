@@ -6,14 +6,16 @@
 #include <Preferences.h>
 #include <main.h>
 #include <device.h>
+#include <face.h>
 
 Device device;
+Face face;
 Preferences prefs;
 
-const unsigned int lvBufferSize = WIDTH * 10;
-uint8_t lvBuffer[2][lvBufferSize];
+const unsigned int buffer_size = WIDTH * 10;
+uint8_t buffer[2][buffer_size];
 
-void my_disp_flush(lv_display_t *display, const lv_area_t *area, unsigned char *data)
+void flush_display(lv_display_t *display, const lv_area_t *area, unsigned char *data)
 {
   uint32_t w = lv_area_get_width(area);
   uint32_t h = lv_area_get_height(area);
@@ -33,35 +35,6 @@ lv_obj_t *home_screen;
 
 // Objects
 lv_obj_t *arc;
-
-// Elements for Home Screen
-void make_arc()
-{
-  lv_color_t stored_color = lv_color_make(140, 0, 255);
-
-  // Create the arc
-  arc = lv_arc_create(home_screen);
-  lv_obj_set_size(arc, 200, 200);
-  lv_obj_set_style_arc_width(arc, 20, LV_PART_INDICATOR);
-  lv_obj_set_style_arc_width(arc, 20, LV_PART_MAIN);
-  lv_arc_set_bg_angles(arc, 120, 60);
-  lv_obj_remove_style(arc, NULL, LV_PART_KNOB);
-  lv_obj_set_style_arc_color(arc, lv_color_make(60, 60, 60), LV_PART_MAIN);
-  lv_obj_set_style_arc_color(arc, lv_color_make(60, 60, 60), LV_PART_INDICATOR);
-  lv_arc_set_range(arc, 0, 100);
-  lv_arc_set_value(arc, 100);
-  lv_obj_align(arc, LV_ALIGN_CENTER, 0, 0);
-}
-
-// Make Home Screen
-void make_home_screen()
-{
-  home_screen = lv_obj_create(NULL);
-  lv_obj_set_style_bg_color(home_screen, lv_color_make(0, 0, 0), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(home_screen, LV_OPA_COVER, LV_PART_MAIN);
-
-  make_arc();
-}
 
 void setup()
 {
@@ -84,12 +57,13 @@ void setup()
     // setup screen
     static auto *lvDisplay = lv_display_create(WIDTH, HEIGHT);
     lv_display_set_color_format(lvDisplay, LV_COLOR_FORMAT_RGB565);
-    lv_display_set_flush_cb(lvDisplay, my_disp_flush);
-    lv_display_set_buffers(lvDisplay, lvBuffer[0], lvBuffer[1], lvBufferSize, LV_DISPLAY_RENDER_MODE_PARTIAL);
+    lv_display_set_flush_cb(lvDisplay, flush_display);
+    lv_display_set_buffers(lvDisplay, buffer[0], buffer[1], buffer_size, LV_DISPLAY_RENDER_MODE_PARTIAL);
 
-    device.screenBrightness(br); // startup brightness
+    device.screen_brightness(br); // startup brightness
 
-    make_home_screen();
+    face.make_home_screen(home_screen);
+    face.make_arc(home_screen, arc);
 
     lv_scr_load(home_screen);
 
@@ -112,7 +86,7 @@ void loop()
     lastTick = current;
     lv_timer_handler();
 
-    device.checkScreenDimming();
+    device.check_screen_dimming();
     delay(5);
   }
   catch (const std::exception &e)

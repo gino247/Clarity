@@ -29,10 +29,10 @@ private:
 public:
     const uint8_t DIM_BRIGHTNESS = 10;
     const uint8_t DEFAULT_BRIGHTNESS = 100;
-    bool isScreenDimmed = false;
+    bool is_screen_dimmed = false;
 
     Device(void);
-    void screenBrightness(uint8_t value);
-    void checkScreenDimming();
-    void resetScreenBrightness();
+    void screen_brightness(uint8_t value);
+    void reset_screen_brightness();
+    void check_screen_dimming();
 };

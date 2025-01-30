@@ -61,27 +61,27 @@ Device::Device()
     setPanel(&_panel_instance);
 }
 
-void Device::screenBrightness(uint8_t value)
+void Device::screen_brightness(uint8_t value)
 {
     setBrightness(value);
 }
 
-void Device::checkScreenDimming()
+void Device::reset_screen_brightness()
 {
-  // TODO: wire up the 'false' to a check if screen should be dimmed
-  if (!isScreenDimmed && false)
+  if (is_screen_dimmed)
   {
-    // Time to dim the screen
-    screenBrightness(DIM_BRIGHTNESS);
-    isScreenDimmed = true;
+    screen_brightness(DEFAULT_BRIGHTNESS);
+    is_screen_dimmed = false;
   }
 }
 
-void Device::resetScreenBrightness()
+void Device::check_screen_dimming()
 {
-  if (isScreenDimmed)
+  // TODO: wire up the 'false' to a check if screen should be dimmed
+  if (!is_screen_dimmed && false)
   {
-    screenBrightness(DEFAULT_BRIGHTNESS);
-    isScreenDimmed = false;
+    // Time to dim the screen
+    screen_brightness(DIM_BRIGHTNESS);
+    is_screen_dimmed = true;
   }
 }
