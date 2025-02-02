@@ -6,8 +6,14 @@
 #include "Arduino.h"
 #include <LovyanGFX.hpp>
 #include <lvgl.h>
+#include "fonts/ubuntu_24.h"
+#include "fonts/ubuntu_100.h"
+#include "fonts/ubuntu_200.h"
+#include "fonts/font_awesome_icons_small.h"
 #include <string.h>
 #include <Preferences.h>
+
+#include "images/splash_2.h"
 
 #include "meter.h"
 
