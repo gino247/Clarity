@@ -80,6 +80,14 @@ lv_obj_t *splash_scr;               // Splash screen
 lv_obj_t *splash_scr_b;             // Splash screen
 lv_obj_t *home_screen;
 
+// Color palette
+lv_color_t palette_amber = LV_COLOR_MAKE(250, 140, 0);
+lv_color_t palette_black = LV_COLOR_MAKE(0, 0, 0);
+lv_color_t palette_red = LV_COLOR_MAKE(255, 0, 0);
+lv_color_t palette_white = LV_COLOR_MAKE(255, 255, 255);
+lv_color_t palette_grey = LV_COLOR_MAKE(90, 90, 90);
+lv_color_t palette_dark_grey = LV_COLOR_MAKE(60, 60, 60);
+
 // Global styles
 static lv_style_t style_unit_text;
 static lv_style_t style_icon;
@@ -116,6 +124,56 @@ void fade_out_splash(lv_timer_t *timer) {
   lv_timer_t *exit_timer = lv_timer_create(fade_in_home, 2000, home_screen); // back to blank
   lv_timer_set_repeat_count(exit_timer, 1);
 
+}
+
+// Icons using the above structure.
+// Positions are for the single icon only - labels will be calculated automatically
+// Structure: horz_pos, vert_pos, vert_offset, alert, warning, flag_when
+//struct_icon_parts FuelData = {0, 180, 5, 0, 100, 25, 10, BELOW, "%"};
+// Font Awesome symbols
+#define FUEL_SYMBOL "\xEF\x94\xAF"
+void make_fuel_arc(void) {
+  lv_obj_t *fuel_arc = lv_arc_create(home_screen);
+  lv_obj_set_size(fuel_arc, 146, 146);
+  lv_arc_set_rotation(fuel_arc, 65);
+  lv_arc_set_bg_angles(fuel_arc, 0, 50);
+  lv_arc_set_range(fuel_arc, 0, 100);
+  lv_obj_center(fuel_arc);
+  lv_arc_set_mode(fuel_arc, LV_ARC_MODE_REVERSE);
+
+  lv_obj_set_style_arc_color(fuel_arc, white, LV_PART_INDICATOR);
+  lv_obj_set_style_arc_color(fuel_arc, lv_color_darken(lv_palette_main(LV_PALETTE_GREY), LV_OPA_0), LV_PART_MAIN);
+  lv_obj_set_style_arc_rounded(fuel_arc, false, LV_PART_MAIN);
+  lv_obj_set_style_arc_rounded(fuel_arc, false, LV_PART_INDICATOR);
+  lv_obj_set_style_arc_width(fuel_arc, 4, LV_PART_MAIN);
+  lv_obj_set_style_arc_width(fuel_arc, 4, LV_PART_INDICATOR);
+  lv_obj_remove_style(fuel_arc, NULL, LV_PART_KNOB);
+
+  lv_obj_set_style_arc_color(fuel_arc, palette_amber, LV_PART_INDICATOR);
+  //lv_arc_set_value(fuel_meter, 20);
+  lv_arc_set_value(fuel_arc, 75);
+
+
+  // lv_obj_t * scale = lv_scale_create(home_screen);
+  // lv_obj_set_size(scale, 150, 150);
+  // lv_scale_set_label_show(scale, true);
+  // lv_scale_set_mode(scale, LV_SCALE_MODE_ROUND_INNER);
+  // lv_obj_center(scale);
+
+  // lv_scale_set_total_tick_count(scale, 21);
+  // lv_scale_set_major_tick_every(scale, 5);
+
+  // static const char * custom_labels[] = {"E", "F", NULL};
+  // lv_scale_set_text_src(scale, custom_labels);
+
+  // lv_obj_set_style_length(scale, 5, LV_PART_ITEMS);
+  // lv_obj_set_style_length(scale, 10, LV_PART_INDICATOR);
+  // lv_scale_set_range(scale, 0, 100);
+
+  lv_obj_t *fuel_icon = lv_label_create(home_screen);
+  lv_label_set_text(fuel_icon, FUEL_SYMBOL);
+  lv_obj_add_style(fuel_icon, &style_icon, 0);
+  lv_obj_set_pos(fuel_icon, 110, 150);
 }
 
 
@@ -229,7 +287,7 @@ void make_styles(void) {
 
   lv_style_init(&style_icon);
   lv_style_set_text_font(&style_icon, &font_awesome_icons_small);
-  lv_style_set_text_color(&style_icon, lv_palette_main(LV_PALETTE_GREY));
+  lv_style_set_text_color(&style_icon, white);//lv_palette_main(LV_PALETTE_GREY));
 }
 
 void make_splash_screen(void) {
@@ -276,11 +334,12 @@ void setup()
     make_splash_screen();
 
     make_home_screen();
+    make_fuel_arc();
     
-    //init Meter
-    meter = new Meter(home_screen);
-    meter->register_animation_cb(set_needle_line_value);
-    meter->build();
+    // //init Meter
+    // meter = new Meter(home_screen);
+    // meter->register_animation_cb(set_needle_line_value);
+    // meter->build();
 
     // lv_scr_load(splash_scr);
     lv_scr_load_anim(splash_scr, LV_SCR_LOAD_ANIM_FADE_IN, 1500, 50, false);
